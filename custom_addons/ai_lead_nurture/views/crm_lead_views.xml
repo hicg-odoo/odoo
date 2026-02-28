@@ -1,0 +1,32 @@
+<odoo>
+    <!-- Inherit the CRM Lead Form View -->
+    <record id="crm_lead_view_form_inherit_ai" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.ai</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add a button in the header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_trigger_ai_evaluation" string="Run AI Evaluation" type="object" class="oe_highlight"/>
+            </xpath>
+
+            <!-- Add a new Notebook Page for AI Data -->
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Agent Insights" name="ai_insights">
+                    <group>
+                        <group>
+                            <field name="ai_lead_score" widget="gauge" options="{'max_value': 100}"/>
+                        </group>
+                        <group>
+                            <field name="ai_summary"/>
+                        </group>
+                    </group>
+                    <separator string="Draft Email"/>
+                    <field name="ai_generated_email" widget="html"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
