@@ -29,6 +29,16 @@ cd addons/crm_ai_team/deploy
 ./deploy.sh quickstart
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
+Windows PowerShell:
+
+```powershell
+cd addons/crm_ai_team/deploy
+.\deploy.ps1 quickstart
+```
+
+=======
+>>>>>>> 19.0
 Then open:
 
 - Odoo: `http://localhost:8069` (or `ODOO_HTTP_PORT` from `.env`)
@@ -39,6 +49,15 @@ Then open:
 ./deploy.sh up-mcp
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
+Windows PowerShell:
+
+```powershell
+.\deploy.ps1 up-mcp
+```
+
+=======
+>>>>>>> 19.0
 ## Seed realistic demo records
 
 This creates teams, agents, transcripts, summaries, opportunities and run telemetry:
@@ -47,6 +66,15 @@ This creates teams, agents, transcripts, summaries, opportunities and run teleme
 ./deploy.sh seed-demo
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
+Windows PowerShell:
+
+```powershell
+.\deploy.ps1 seed-demo
+```
+
+=======
+>>>>>>> 19.0
 ## Useful commands
 
 ```bash
@@ -55,3 +83,15 @@ This creates teams, agents, transcripts, summaries, opportunities and run teleme
 ./deploy.sh logs mcp-server
 ./deploy.sh down
 ```
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
+
+Windows PowerShell:
+
+```powershell
+.\deploy.ps1 ps
+.\deploy.ps1 logs odoo
+.\deploy.ps1 logs mcp-server
+.\deploy.ps1 down
+```
+=======
+>>>>>>> 19.0
