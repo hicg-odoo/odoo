@@ -9,67 +9,39 @@ services:
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
 
-  odoo-init:
-    build:
-      context: ../../..
-      dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
-    restart: "no"
-    depends_on:
-      - db
-    environment:
-      HOST: db
-      USER: ${POSTGRES_USER:-odoo}
-      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
-    volumes:
-      - odoo-web-data:/var/lib/odoo
-    command:
-      - odoo
-      - --db_host=db
-      - --db_user=${POSTGRES_USER:-odoo}
-      - --db_password=${POSTGRES_PASSWORD:-odoo}
-      - --database=${ODOO_DB:-odoo}
-      - --init=crm_ai_team
-      - --without-demo=all
-      - --stop-after-init
-
-  odoo-runtime:
+  odoo:
     build:
       context: ../../..
       dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
     restart: unless-stopped
     depends_on:
       - db
-      - odoo-init
     ports:
       - "${ODOO_HTTP_PORT:-8069}:8069"
     environment:
-      HOST: db
-      USER: ${POSTGRES_USER:-odoo}
-      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-odoo}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      ODOO_DB: ${ODOO_DB:-odoo}
     volumes:
       - odoo-web-data:/var/lib/odoo
-    command:
-      - odoo
-      - --db_host=db
-      - --db_user=${POSTGRES_USER:-odoo}
-      - --db_password=${POSTGRES_PASSWORD:-odoo}
-      - --database=${ODOO_DB:-odoo}
-      - --update=crm_ai_team
-      - --without-demo=all
 
   mcp-server:
     build:
       context: ../../..
       dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
     restart: unless-stopped
+    profiles: ["mcp"]
     depends_on:
-      - odoo-runtime
+      - odoo
     environment:
-      ODOO_URL: http://odoo-runtime:8069
+      ODOO_URL: http://odoo:8069
       ODOO_DB: ${ODOO_DB:-odoo}
       ODOO_USERNAME: ${ODOO_ADMIN_USERNAME:-admin}
       ODOO_PASSWORD: ${ODOO_ADMIN_PASSWORD:-admin}
-    command: ["python3", "/mnt/extra-addons/crm_ai_team/tools/mcp_server.py"]
+    entrypoint: ["python3"]
+    command: ["/mnt/extra-addons/crm_ai_team/tools/mcp_server.py"]
 
 volumes:
   odoo-db-data:

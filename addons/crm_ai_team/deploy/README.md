@@ -1,59 +1,57 @@
-# Deploying `crm_ai_team` repeatedly
+# Deploying `crm_ai_team` locally (fast)
 
-## Options
+## Deployment options
 
-1. **Direct module copy + Odoo service restart**
-   - Copy `addons/crm_ai_team` into an existing Odoo addons path.
-   - Run Odoo with `--update=crm_ai_team` on each release.
-   - ✅ Simple for existing deployments.
-   - ❌ Least reproducible across environments.
+1. **Copy addon into an existing Odoo instance + update module**
+   - Fast if you already run Odoo.
+   - Lowest reproducibility.
 
-2. **Python package/wheel distribution**
-   - Package the module as a Python artifact and install via `pip`.
-   - ✅ Integrates with artifact repositories.
-   - ❌ More packaging overhead for Odoo addon path resolution.
+2. **Package addon as Python/wheel artifact**
+   - Good for internal artifact pipelines.
+   - More setup complexity for addon path and runtime parity.
 
-3. **Containerized deployment (recommended / implemented here)**
-   - Build a versioned Odoo image that includes `crm_ai_team` and MCP dependency.
-   - Use Docker Compose for Postgres + Odoo init + Odoo runtime + MCP server.
-   - ✅ Most reproducible and easiest to run repeatedly in dev/stage/prod.
+3. **Containerized stack (recommended and implemented)**
+   - One command spin-up with pinned services.
+   - Reproducible local/staging behavior.
 
-## Implemented solution
+## What this package provides
 
-This directory provides a repeatable deployment package:
+- `odoo/Dockerfile`: Odoo image with `crm_ai_team` + `mcp` installed.
+- `odoo/entrypoint.sh`: auto-initializes/updates `crm_ai_team` at container start.
+- `docker-compose.yml`: `db`, `odoo`, and optional `mcp-server` profile.
+- `.env.example`: local config template.
+- `deploy.sh`: quick local lifecycle wrapper.
 
-- `odoo/Dockerfile`: Builds an Odoo image with `crm_ai_team` preloaded and `mcp` installed.
-- `docker-compose.yml`: Defines `db`, `odoo-init`, `odoo-runtime`, and `mcp-server` services.
-- `.env.example`: Deployment variables template.
-- `deploy.sh`: Convenience wrapper around common `docker compose` commands.
-
-## Quick start
+## Quick local browser testing
 
 ```bash
 cd addons/crm_ai_team/deploy
-cp .env.example .env
-./deploy.sh up
+./deploy.sh quickstart
 ```
 
-Open Odoo at `http://localhost:8069` (or `ODOO_HTTP_PORT`).
+Then open:
 
-## Re-deploying new versions
+- Odoo: `http://localhost:8069` (or `ODOO_HTTP_PORT` from `.env`)
 
-1. Pull new code.
-2. Rebuild/restart:
+## Optional: start MCP too
 
 ```bash
-cd addons/crm_ai_team/deploy
-./deploy.sh up
+./deploy.sh up-mcp
 ```
 
-Compose rebuilds the image and updates running containers.
+## Seed realistic demo records
 
-## Operational commands
+This creates teams, agents, transcripts, summaries, opportunities and run telemetry:
+
+```bash
+./deploy.sh seed-demo
+```
+
+## Useful commands
 
 ```bash
 ./deploy.sh ps
-./deploy.sh logs odoo-runtime
+./deploy.sh logs odoo
 ./deploy.sh logs mcp-server
 ./deploy.sh down
 ```
