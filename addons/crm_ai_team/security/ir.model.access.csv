@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_ai_agent_team_user,access.crm.ai.agent.team.user,model_crm_ai_agent_team,base.group_user,1,1,1,1
+access_crm_ai_agent_user,access.crm.ai.agent.user,model_crm_ai_agent,base.group_user,1,1,1,1
+access_crm_ai_theme_user,access.crm.ai.theme.user,model_crm_ai_theme,base.group_user,1,1,1,1
+access_crm_ai_conversation_summary_user,access.crm.ai.conversation.summary.user,model_crm_ai_conversation_summary,base.group_user,1,1,1,1
+access_crm_ai_relationship_signal_user,access.crm.ai.relationship.signal.user,model_crm_ai_relationship_signal,base.group_user,1,1,1,1
+access_crm_ai_agent_run_user,access.crm.ai.agent.run.user,model_crm_ai_agent_run,base.group_user,1,1,1,1
+access_crm_ai_agent_run_log_user,access.crm.ai.agent.run.log.user,model_crm_ai_agent_run_log,base.group_user,1,1,1,1
+access_crm_ai_meeting_transcript_user,access.crm.ai.meeting.transcript.user,model_crm_ai_meeting_transcript,base.group_user,1,1,1,1

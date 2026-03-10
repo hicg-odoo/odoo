@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+
+  odoo:
+    build:
+      context: ../../..
+      dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-odoo}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      ODOO_DB: ${ODOO_DB:-odoo}
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+
+  mcp-server:
+    build:
+      context: ../../..
+      dockerfile: addons/crm_ai_team/deploy/mcp/Dockerfile
+    restart: unless-stopped
+    profiles: ["mcp"]
+    depends_on:
+      - odoo
+    environment:
+      ODOO_URL: http://odoo:8069
+      ODOO_DB: ${ODOO_DB:-odoo}
+      ODOO_USERNAME: ${ODOO_ADMIN_USERNAME:-admin}
+      ODOO_PASSWORD: ${ODOO_ADMIN_PASSWORD:-admin}
+    command: ["python", "/app/crm_ai_team/tools/mcp_server.py"]
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
