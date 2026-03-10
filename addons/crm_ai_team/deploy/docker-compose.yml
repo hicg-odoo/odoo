@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+
+  odoo-init:
+    build:
+      context: ../../..
+      dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
+    restart: "no"
+    depends_on:
+      - db
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+    command:
+      - odoo
+      - --db_host=db
+      - --db_user=${POSTGRES_USER:-odoo}
+      - --db_password=${POSTGRES_PASSWORD:-odoo}
+      - --database=${ODOO_DB:-odoo}
+      - --init=crm_ai_team
+      - --without-demo=all
+      - --stop-after-init
+
+  odoo-runtime:
+    build:
+      context: ../../..
+      dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+      - odoo-init
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+    command:
+      - odoo
+      - --db_host=db
+      - --db_user=${POSTGRES_USER:-odoo}
+      - --db_password=${POSTGRES_PASSWORD:-odoo}
+      - --database=${ODOO_DB:-odoo}
+      - --update=crm_ai_team
+      - --without-demo=all
+
+  mcp-server:
+    build:
+      context: ../../..
+      dockerfile: addons/crm_ai_team/deploy/odoo/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - odoo-runtime
+    environment:
+      ODOO_URL: http://odoo-runtime:8069
+      ODOO_DB: ${ODOO_DB:-odoo}
+      ODOO_USERNAME: ${ODOO_ADMIN_USERNAME:-admin}
+      ODOO_PASSWORD: ${ODOO_ADMIN_PASSWORD:-admin}
+    command: ["python3", "/mnt/extra-addons/crm_ai_team/tools/mcp_server.py"]
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
