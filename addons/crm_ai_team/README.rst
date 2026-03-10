@@ -94,4 +94,3 @@ A production-style repeatable deployment package is provided in
 * environment template and deployment helper script
 
 See ``addons/crm_ai_team/deploy/README.md`` for operational instructions.
-For Windows-specific local startup/testing commands, see ``addons/crm_ai_team/LOCAL_TESTING.md``.

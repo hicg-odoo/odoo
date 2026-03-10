@@ -7,8 +7,11 @@ This guide is focused on **quick local validation in a browser** plus a few usef
 - Docker + Docker Compose
 - Port `8069` available (or adjust in `.env`)
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
 On Windows, use **Docker Desktop** and PowerShell.
 
+=======
+>>>>>>> 19.0
 ## 2) Start locally (browser-ready)
 
 ```bash
@@ -16,6 +19,7 @@ cd addons/crm_ai_team/deploy
 ./deploy.sh quickstart
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
 Windows PowerShell:
 
 ```powershell
@@ -23,6 +27,8 @@ cd addons/crm_ai_team/deploy
 .\deploy.ps1 quickstart
 ```
 
+=======
+>>>>>>> 19.0
 What this does:
 - starts Postgres
 - starts Odoo
@@ -38,6 +44,7 @@ cd addons/crm_ai_team/deploy
 ./deploy.sh seed-demo
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
 Windows PowerShell:
 
 ```powershell
@@ -45,6 +52,8 @@ cd addons/crm_ai_team/deploy
 .\deploy.ps1 seed-demo
 ```
 
+=======
+>>>>>>> 19.0
 This creates:
 - AI team + agents
 - customers and opportunities
@@ -61,6 +70,7 @@ cd addons/crm_ai_team/deploy
 ./deploy.sh up-mcp
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
 Windows PowerShell:
 
 ```powershell
@@ -68,6 +78,8 @@ cd addons/crm_ai_team/deploy
 .\deploy.ps1 up-mcp
 ```
 
+=======
+>>>>>>> 19.0
 This starts the `mcp-server` container using credentials from `.env`.
 
 ## 5) Run module tests
@@ -95,6 +107,7 @@ cd addons/crm_ai_team/deploy
 ./deploy.sh down
 ```
 
+<<<<<<< codex/design-architecture-for-ai-agent-team-qlow3h
 Windows PowerShell:
 
 ```powershell
@@ -106,6 +119,8 @@ cd addons/crm_ai_team/deploy
 .\deploy.ps1 down
 ```
 
+=======
+>>>>>>> 19.0
 ## 7) Fast troubleshooting
 
 - Odoo not opening?
