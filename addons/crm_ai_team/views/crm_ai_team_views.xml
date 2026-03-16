@@ -1,190 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_crm_ai_agent_team_tree" model="ir.ui.view">
-        <field name="name">crm.ai.agent.team.tree</field>
-        <field name="model">crm.ai.agent.team</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="active"/>
-                <field name="run_count"/>
-                <field name="last_run_date"/>
-                <field name="last_run_status"/>
-            </tree>
-        </field>
-    </record>
 
-    <record id="view_crm_ai_agent_team_form" model="ir.ui.view">
-        <field name="name">crm.ai.agent.team.form</field>
-        <field name="model">crm.ai.agent.team</field>
-        <field name="arch" type="xml">
-            <form>
-                <header>
-                    <button name="action_run_agent_team" type="object" string="Run Team" class="btn-primary"/>
-                </header>
-                <sheet>
+<!-- Agent Team Views -->
+<record id="view_crm_ai_agent_team_tree" model="ir.ui.view">
+    <field name="name">crm.ai.agent.team.tree</field>
+    <field name="model">crm.ai.agent.team</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="llm_provider"/>
+            <field name="active"/>
+            <field name="run_count"/>
+            <field name="last_run_date"/>
+            <field name="last_run_status"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_crm_ai_agent_team_form" model="ir.ui.view">
+    <field name="name">crm.ai.agent.team.form</field>
+    <field name="model">crm.ai.agent.team</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="action_run_agent_team" type="object" string="Run Team" class="btn-primary"/>
+            </header>
+            <sheet>
+                <group>
                     <group>
                         <field name="name"/>
                         <field name="active"/>
+                    </group>
+                    <group>
                         <field name="run_count" readonly="1"/>
                         <field name="last_run_date" readonly="1"/>
                         <field name="last_run_status" readonly="1"/>
                     </group>
-                    <notebook>
-                        <page string="Agents">
-                            <field name="member_ids">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="role"/>
-                                    <field name="active"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Conversation Summaries">
-                            <field name="summary_ids" readonly="1"/>
-                        </page>
-                        <page string="Runs">
-                            <field name="run_ids" readonly="1"/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_conversation_summary_tree" model="ir.ui.view">
-        <field name="name">crm.ai.conversation.summary.tree</field>
-        <field name="model">crm.ai.conversation.summary</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="conversation_datetime"/>
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="team_id"/>
-                <field name="sentiment"/>
-                <field name="processed"/>
-                <field name="opportunity_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_conversation_summary_form" model="ir.ui.view">
-        <field name="name">crm.ai.conversation.summary.form</field>
-        <field name="model">crm.ai.conversation.summary</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
+                </group>
+                <group string="LLM Configuration">
                     <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="conversation_datetime"/>
-                            <field name="partner_id"/>
-                        </group>
-                        <group>
-                            <field name="team_id"/>
-                            <field name="agent_id"/>
-                            <field name="sentiment"/>
-                            <field name="processed"/>
-                            <field name="transcript_id" readonly="1"/>
-                        </group>
+                        <field name="llm_provider"/>
+                        <field name="llm_model"/>
+                        <field name="llm_api_endpoint"/>
                     </group>
                     <group>
-                        <field name="theme_ids" widget="many2many_tags"/>
-                        <field name="opportunity_id"/>
-                        <field name="case_ref"/>
+                        <field name="llm_temperature"/>
+                        <field name="llm_max_tokens"/>
                     </group>
-                    <group>
-                        <field name="summary"/>
-                        <field name="key_points"/>
-                    </group>
-                    <notebook>
-                        <page string="Relationship Signals">
-                            <field name="signal_ids">
-                                <tree editable="bottom">
-                                    <field name="signal_type"/>
-                                    <field name="priority"/>
-                                    <field name="confidence"/>
-                                    <field name="owner_id"/>
-                                    <field name="lead_id"/>
-                                    <field name="case_ref"/>
-                                    <field name="recommendation"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-                <chatter/>
-            </form>
-        </field>
-    </record>
+                    <field name="llm_system_prompt" colspan="2"/>
+                </group>
+                <notebook>
+                    <page string="Agents">
+                        <field name="member_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="role"/>
+                                <field name="llm_provider"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Conversation Summaries">
+                        <field name="summary_ids" readonly="1"/>
+                    </page>
+                    <page string="Runs">
+                        <field name="run_ids" readonly="1"/>
+                    </page>
+                </notebook>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
 
-    <record id="view_crm_ai_theme_tree" model="ir.ui.view">
-        <field name="name">crm.ai.theme.tree</field>
-        <field name="model">crm.ai.theme</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="code"/>
-            </tree>
-        </field>
-    </record>
+<!-- Agent Views -->
+<record id="view_crm_ai_agent_tree" model="ir.ui.view">
+    <field name="name">crm.ai.agent.tree</field>
+    <field name="model">crm.ai.agent</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="team_id"/>
+            <field name="role"/>
+            <field name="llm_provider"/>
+            <field name="active"/>
+        </tree>
+    </field>
+</record>
 
-    <record id="view_crm_ai_theme_form" model="ir.ui.view">
-        <field name="name">crm.ai.theme.form</field>
-        <field name="model">crm.ai.theme</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
+<record id="view_crm_ai_agent_form" model="ir.ui.view">
+    <field name="name">crm.ai.agent.form</field>
+    <field name="model">crm.ai.agent</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
                     <group>
                         <field name="name"/>
-                        <field name="code"/>
+                        <field name="team_id"/>
+                        <field name="role"/>
+                        <field name="active"/>
                     </group>
-                    <field name="description"/>
-                </sheet>
-            </form>
-        </field>
-    </record>
+                    <group>
+                        <field name="llm_provider"/>
+                        <field name="llm_model"/>
+                        <field name="llm_temperature"/>
+                        <field name="llm_max_tokens"/>
+                    </group>
+                </group>
+                <group string="Prompt Configuration">
+                    <field name="system_prompt" colspan="2"/>
+                    <field name="instruction"/>
+                    <field name="response_format"/>
+                </group>
+                <group string="Tool Definitions">
+                    <field name="tool_definitions" colspan="2" placeholder='[{"name": "get_customer_info", "description": "..."}]'/>
+                </group>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
 
-    <record id="action_crm_ai_agent_team" model="ir.actions.act_window">
-        <field name="name">AI Agent Teams</field>
-        <field name="res_model">crm.ai.agent.team</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+<!-- Conversation Summary Views -->
+<record id="view_crm_ai_conversation_summary_tree" model="ir.ui.view">
+    <field name="name">crm.ai.conversation.summary.tree</field>
+    <field name="model">crm.ai.conversation.summary</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="conversation_datetime"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="team_id"/>
+            <field name="sentiment"/>
+            <field name="processed"/>
+            <field name="ai_processed"/>
+        </tree>
+    </field>
+</record>
 
-    <record id="action_crm_ai_conversation_summary" model="ir.actions.act_window">
-        <field name="name">Conversation Summaries</field>
-        <field name="res_model">crm.ai.conversation.summary</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+<record id="view_crm_ai_conversation_summary_form" model="ir.ui.view">
+    <field name="name">crm.ai.conversation.summary.form</field>
+    <field name="model">crm.ai.conversation.summary</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="action_reprocess_with_ai" type="object" string="Reprocess with AI" class="btn-primary"/>
+                <button name="action_generate_embedding" type="object" string="Generate Embedding"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="conversation_datetime"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <group>
+                        <field name="team_id"/>
+                        <field name="agent_id"/>
+                        <field name="sentiment"/>
+                        <field name="processed"/>
+                        <field name="transcript_id" readonly="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="theme_ids" widget="many2many_tags"/>
+                    <field name="opportunity_ref"/>
+                    <field name="case_ref"/>
+                </group>
+                <group>
+                    <field name="summary"/>
+                    <field name="key_points"/>
+                </group>
+                <group string="AI Processing">
+                    <group>
+                        <field name="ai_processed" readonly="1"/>
+                        <field name="ai_model_version" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="embedding_model"/>
+                        <field name="embedding_dimension"/>
+                        <field name="embedding_timestamp"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Relationship Signals">
+                        <field name="signal_ids">
+                            <tree editable="bottom">
+                                <field name="signal_type"/>
+                                <field name="priority"/>
+                                <field name="confidence"/>
+                                <field name="state"/>
+                                <field name="owner_id"/>
+                                <field name="lead_ref"/>
+                                <field name="recommendation"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
 
-    <record id="action_crm_ai_theme" model="ir.actions.act_window">
-        <field name="name">Conversation Themes</field>
-        <field name="res_model">crm.ai.theme</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+<!-- Theme Views -->
+<record id="view_crm_ai_theme_tree" model="ir.ui.view">
+    <field name="name">crm.ai.theme.tree</field>
+    <field name="model">crm.ai.theme</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="priority_weight"/>
+        </tree>
+    </field>
+</record>
 
-    <record id="view_crm_ai_agent_run_tree" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.tree</field>
-        <field name="model">crm.ai.agent.run</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="start_datetime"/>
-                <field name="team_id"/>
-                <field name="status"/>
-                <field name="processed_summary_count"/>
-                <field name="success_step_count"/>
-                <field name="failed_step_count"/>
-                <field name="duration_seconds"/>
-            </tree>
-        </field>
-    </record>
+<record id="view_crm_ai_theme_form" model="ir.ui.view">
+    <field name="name">crm.ai.theme.form</field>
+    <field name="model">crm.ai.theme</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="priority_weight"/>
+                </group>
+                <field name="description"/>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
 
-    <record id="view_crm_ai_agent_run_form" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.form</field>
-        <field name="model">crm.ai.agent.run</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
+<!-- Signal Rule Views -->
+<record id="view_crm_ai_signal_rule_tree" model="ir.ui.view">
+    <field name="name">crm.ai.signal.rule.tree</field>
+    <field name="model">crm.ai.signal.rule</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="condition_sentiment"/>
+            <field name="condition_agent_role"/>
+            <field name="action_signal_type"/>
+            <field name="action_priority"/>
+            <field name="active"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_crm_ai_signal_rule_form" model="ir.ui.view">
+    <field name="name">crm.ai.signal.rule.form</field>
+    <field name="model">crm.ai.signal.rule</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="active"/>
+                </group>
+                <group string="Conditions">
+                    <group>
+                        <field name="condition_sentiment"/>
+                        <field name="condition_agent_role"/>
+                    </group>
+                    <group>
+                        <field name="condition_theme_ids" widget="many2many_tags"/>
+                    </group>
+                    <field name="condition_expression" colspan="2" placeholder="Optional Python expression: summary.partner_id.category_id.filtered(lambda c: c.name == 'VIP')"/>
+                </group>
+                <group string="Actions">
+                    <group>
+                        <field name="action_signal_type"/>
+                        <field name="action_priority"/>
+                    </group>
+                    <group>
+                        <field name="action_confidence"/>
+                    </group>
+                    <field name="action_recommendation" colspan="2" placeholder="Template with {customer}, {themes}, {sentiment} placeholders"/>
+                </group>
+                <field name="description" colspan="2"/>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
+
+<!-- Agent Run Views -->
+<record id="view_crm_ai_agent_run_tree" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.tree</field>
+    <field name="model">crm.ai.agent.run</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="start_datetime"/>
+            <field name="team_id"/>
+            <field name="status"/>
+            <field name="processed_summary_count"/>
+            <field name="success_step_count"/>
+            <field name="failed_step_count"/>
+            <field name="duration_seconds"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_crm_ai_agent_run_form" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.form</field>
+    <field name="model">crm.ai.agent.run</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
                     <group>
                         <field name="name"/>
                         <field name="team_id"/>
@@ -195,154 +324,257 @@
                         <field name="end_datetime"/>
                         <field name="duration_seconds"/>
                     </group>
+                </group>
+                <group>
+                    <field name="processed_summary_count"/>
+                    <field name="success_step_count"/>
+                    <field name="failed_step_count"/>
+                </group>
+                <field name="log_ids" readonly="1">
+                    <tree>
+                        <field name="create_date"/>
+                        <field name="agent_id"/>
+                        <field name="summary_id"/>
+                        <field name="log_level"/>
+                        <field name="message"/>
+                    </tree>
+                </field>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
+
+<record id="view_crm_ai_agent_run_graph" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.graph</field>
+    <field name="model">crm.ai.agent.run</field>
+    <field name="arch" type="xml">
+        <graph string="Agent Run Metrics" type="bar">
+            <field name="team_id" type="row"/>
+            <field name="status" type="col"/>
+            <field name="processed_summary_count" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="view_crm_ai_agent_run_pivot" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.pivot</field>
+    <field name="model">crm.ai.agent.run</field>
+    <field name="arch" type="xml">
+        <pivot string="Agent Run Observability">
+            <field name="team_id" type="row"/>
+            <field name="status" type="col"/>
+            <field name="processed_summary_count" type="measure"/>
+            <field name="failed_step_count" type="measure"/>
+            <field name="duration_seconds" type="measure"/>
+        </pivot>
+    </field>
+</record>
+
+<!-- Run Log Views -->
+<record id="view_crm_ai_agent_run_log_tree" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.log.tree</field>
+    <field name="model">crm.ai.agent.run.log</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="create_date"/>
+            <field name="team_id"/>
+            <field name="run_id"/>
+            <field name="agent_id"/>
+            <field name="summary_id"/>
+            <field name="log_level"/>
+            <field name="message"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_crm_ai_agent_run_log_pivot" model="ir.ui.view">
+    <field name="name">crm.ai.agent.run.log.pivot</field>
+    <field name="model">crm.ai.agent.run.log</field>
+    <field name="arch" type="xml">
+        <pivot string="Run Log Observability">
+            <field name="team_id" type="row"/>
+            <field name="log_level" type="col"/>
+        </pivot>
+    </field>
+</record>
+
+<!-- Meeting Transcript Views -->
+<record id="view_crm_ai_meeting_transcript_tree" model="ir.ui.view">
+    <field name="name">crm.ai.meeting.transcript.tree</field>
+    <field name="model">crm.ai.meeting.transcript</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="meeting_datetime"/>
+            <field name="name"/>
+            <field name="provider"/>
+            <field name="external_ref"/>
+            <field name="partner_id"/>
+            <field name="team_id"/>
+            <field name="ingest_status"/>
+            <field name="summary_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_crm_ai_meeting_transcript_form" model="ir.ui.view">
+    <field name="name">crm.ai.meeting.transcript.form</field>
+    <field name="model">crm.ai.meeting.transcript</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="action_process_transcript" type="object" string="Process Transcript" class="btn-primary"/>
+            </header>
+            <sheet>
+                <group>
                     <group>
-                        <field name="processed_summary_count"/>
-                        <field name="success_step_count"/>
-                        <field name="failed_step_count"/>
-                    </group>
-                    <field name="log_ids" readonly="1">
-                        <tree>
-                            <field name="create_date"/>
-                            <field name="agent_id"/>
-                            <field name="summary_id"/>
-                            <field name="log_level"/>
-                            <field name="message"/>
-                        </tree>
-                    </field>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_agent_run_graph" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.graph</field>
-        <field name="model">crm.ai.agent.run</field>
-        <field name="arch" type="xml">
-            <graph string="Agent Run Metrics" type="bar">
-                <field name="team_id" type="row"/>
-                <field name="status" type="col"/>
-                <field name="processed_summary_count" type="measure"/>
-            </graph>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_agent_run_pivot" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.pivot</field>
-        <field name="model">crm.ai.agent.run</field>
-        <field name="arch" type="xml">
-            <pivot string="Agent Run Observability">
-                <field name="team_id" type="row"/>
-                <field name="status" type="col"/>
-                <field name="processed_summary_count" type="measure"/>
-                <field name="failed_step_count" type="measure"/>
-                <field name="duration_seconds" type="measure"/>
-            </pivot>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_agent_run_log_tree" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.log.tree</field>
-        <field name="model">crm.ai.agent.run.log</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="create_date"/>
-                <field name="team_id"/>
-                <field name="run_id"/>
-                <field name="agent_id"/>
-                <field name="summary_id"/>
-                <field name="log_level"/>
-                <field name="message"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_agent_run_log_pivot" model="ir.ui.view">
-        <field name="name">crm.ai.agent.run.log.pivot</field>
-        <field name="model">crm.ai.agent.run.log</field>
-        <field name="arch" type="xml">
-            <pivot string="Run Log Observability">
-                <field name="team_id" type="row"/>
-                <field name="log_level" type="col"/>
-            </pivot>
-        </field>
-    </record>
-
-    <record id="action_crm_ai_agent_run" model="ir.actions.act_window">
-        <field name="name">Agent Runs</field>
-        <field name="res_model">crm.ai.agent.run</field>
-        <field name="view_mode">tree,graph,pivot,form</field>
-    </record>
-
-    <record id="action_crm_ai_agent_run_log" model="ir.actions.act_window">
-        <field name="name">Run Logs</field>
-        <field name="res_model">crm.ai.agent.run.log</field>
-        <field name="view_mode">tree,pivot</field>
-    </record>
-
-    <record id="view_crm_ai_meeting_transcript_tree" model="ir.ui.view">
-        <field name="name">crm.ai.meeting.transcript.tree</field>
-        <field name="model">crm.ai.meeting.transcript</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="meeting_datetime"/>
-                <field name="name"/>
-                <field name="provider"/>
-                <field name="external_ref"/>
-                <field name="partner_id"/>
-                <field name="team_id"/>
-                <field name="ingest_status"/>
-                <field name="summary_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_crm_ai_meeting_transcript_form" model="ir.ui.view">
-        <field name="name">crm.ai.meeting.transcript.form</field>
-        <field name="model">crm.ai.meeting.transcript</field>
-        <field name="arch" type="xml">
-            <form>
-                <header>
-                    <button name="action_process_transcript" type="object" string="Process Transcript" class="btn-primary"/>
-                </header>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="provider"/>
-                            <field name="external_ref"/>
-                            <field name="meeting_datetime"/>
-                            <field name="language"/>
-                        </group>
-                        <group>
-                            <field name="partner_id"/>
-                            <field name="team_id"/>
-                            <field name="opportunity_id"/>
-                            <field name="ingest_status"/>
-                            <field name="summary_id" readonly="1"/>
-                        </group>
+                        <field name="name"/>
+                        <field name="provider"/>
+                        <field name="external_ref"/>
+                        <field name="meeting_datetime"/>
+                        <field name="language"/>
                     </group>
                     <group>
-                        <field name="raw_transcript"/>
-                        <field name="processing_error" readonly="1"/>
+                        <field name="partner_id"/>
+                        <field name="team_id"/>
+                        <field name="opportunity_ref"/>
+                        <field name="ingest_status"/>
+                        <field name="summary_id" readonly="1"/>
                     </group>
-                </sheet>
-                <chatter/>
-            </form>
-        </field>
-    </record>
+                </group>
+                <group>
+                    <field name="raw_transcript"/>
+                    <field name="processing_error" readonly="1"/>
+                </group>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
 
-    <record id="action_crm_ai_meeting_transcript" model="ir.actions.act_window">
-        <field name="name">Meeting Transcripts</field>
-        <field name="res_model">crm.ai.meeting.transcript</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+<!-- Relationship Signal Views -->
+<record id="view_crm_ai_relationship_signal_tree" model="ir.ui.view">
+    <field name="name">crm.ai.relationship.signal.tree</field>
+    <field name="model">crm.ai.relationship.signal</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="summary_id"/>
+            <field name="partner_id"/>
+            <field name="signal_type"/>
+            <field name="priority"/>
+            <field name="confidence"/>
+            <field name="state"/>
+            <field name="owner_id"/>
+        </tree>
+    </field>
+</record>
 
-    <menuitem id="menu_crm_ai_root" name="AI Relationship Ops" parent="crm.crm_menu_root" sequence="120"/>
-    <menuitem id="menu_crm_ai_agent_team" name="Agent Teams" parent="menu_crm_ai_root" action="action_crm_ai_agent_team" sequence="10"/>
-    <menuitem id="menu_crm_ai_conversation_summary" name="Conversation Summaries" parent="menu_crm_ai_root" action="action_crm_ai_conversation_summary" sequence="20"/>
-    <menuitem id="menu_crm_ai_theme" name="Themes" parent="menu_crm_ai_root" action="action_crm_ai_theme" sequence="30"/>
-    <menuitem id="menu_crm_ai_meeting_transcript" name="Meeting Transcripts" parent="menu_crm_ai_root" action="action_crm_ai_meeting_transcript" sequence="40"/>
-    <menuitem id="menu_crm_ai_observability" name="Observability" parent="menu_crm_ai_root" sequence="50"/>
-    <menuitem id="menu_crm_ai_agent_run" name="Agent Runs" parent="menu_crm_ai_observability" action="action_crm_ai_agent_run" sequence="10"/>
-    <menuitem id="menu_crm_ai_agent_run_log" name="Run Logs" parent="menu_crm_ai_observability" action="action_crm_ai_agent_run_log" sequence="20"/>
+<record id="view_crm_ai_relationship_signal_form" model="ir.ui.view">
+    <field name="name">crm.ai.relationship.signal.form</field>
+    <field name="model">crm.ai.relationship.signal</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="action_acknowledge" type="object" string="Acknowledge" states="new" class="btn-primary"/>
+                <button name="action_start_progress" type="object" string="Start Progress" states="acknowledged"/>
+                <button name="action_resolve" type="object" string="Resolve" states="in_progress"/>
+                <button name="action_dismiss" type="object" string="Dismiss" states="new,acknowledged"/>
+                <field name="state" widget="statusbar" statusbar_visible="new,acknowledged,in_progress,resolved"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="summary_id"/>
+                        <field name="partner_id"/>
+                        <field name="signal_type"/>
+                        <field name="state"/>
+                    </group>
+                    <group>
+                        <field name="priority"/>
+                        <field name="confidence"/>
+                        <field name="owner_id"/>
+                        <field name="lead_ref"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="case_ref"/>
+                </group>
+                <group>
+                    <field name="recommendation"/>
+                    <field name="resolution_notes"/>
+                </group>
+            </sheet>
+            <chatter/>
+        </form>
+    </field>
+</record>
+
+<!-- Actions -->
+<record id="action_crm_ai_agent_team" model="ir.actions.act_window">
+    <field name="name">AI Agent Teams</field>
+    <field name="res_model">crm.ai.agent.team</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_agent" model="ir.actions.act_window">
+    <field name="name">AI Agents</field>
+    <field name="res_model">crm.ai.agent</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_conversation_summary" model="ir.actions.act_window">
+    <field name="name">Conversation Summaries</field>
+    <field name="res_model">crm.ai.conversation.summary</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_theme" model="ir.actions.act_window">
+    <field name="name">Conversation Themes</field>
+    <field name="res_model">crm.ai.theme</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_signal_rule" model="ir.actions.act_window">
+    <field name="name">Signal Rules</field>
+    <field name="res_model">crm.ai.signal.rule</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_relationship_signal" model="ir.actions.act_window">
+    <field name="name">Relationship Signals</field>
+    <field name="res_model">crm.ai.relationship.signal</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="action_crm_ai_agent_run" model="ir.actions.act_window">
+    <field name="name">Agent Runs</field>
+    <field name="res_model">crm.ai.agent.run</field>
+    <field name="view_mode">tree,graph,pivot,form</field>
+</record>
+
+<record id="action_crm_ai_agent_run_log" model="ir.actions.act_window">
+    <field name="name">Run Logs</field>
+    <field name="res_model">crm.ai.agent.run.log</field>
+    <field name="view_mode">tree,pivot</field>
+</record>
+
+<record id="action_crm_ai_meeting_transcript" model="ir.actions.act_window">
+    <field name="name">Meeting Transcripts</field>
+    <field name="res_model">crm.ai.meeting.transcript</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<!-- Menus - Parent menu under CRM if available, otherwise under Sales -->
+<menuitem id="menu_crm_ai_root" name="AI Relationship Ops" parent="crm.crm_menu_root" sequence="120"/>
+<menuitem id="menu_crm_ai_agent_team" name="Agent Teams" parent="menu_crm_ai_root" action="action_crm_ai_agent_team" sequence="10"/>
+<menuitem id="menu_crm_ai_agent" name="Agents" parent="menu_crm_ai_root" action="action_crm_ai_agent" sequence="15"/>
+<menuitem id="menu_crm_ai_conversation_summary" name="Conversation Summaries" parent="menu_crm_ai_root" action="action_crm_ai_conversation_summary" sequence="20"/>
+<menuitem id="menu_crm_ai_theme" name="Themes" parent="menu_crm_ai_root" action="action_crm_ai_theme" sequence="30"/>
+<menuitem id="menu_crm_ai_signal_rule" name="Signal Rules" parent="menu_crm_ai_root" action="action_crm_ai_signal_rule" sequence="35"/>
+<menuitem id="menu_crm_ai_relationship_signal" name="Signals" parent="menu_crm_ai_root" action="action_crm_ai_relationship_signal" sequence="37"/>
+<menuitem id="menu_crm_ai_meeting_transcript" name="Meeting Transcripts" parent="menu_crm_ai_root" action="action_crm_ai_meeting_transcript" sequence="40"/>
+<menuitem id="menu_crm_ai_observability" name="Observability" parent="menu_crm_ai_root" sequence="50"/>
+<menuitem id="menu_crm_ai_agent_run" name="Agent Runs" parent="menu_crm_ai_observability" action="action_crm_ai_agent_run" sequence="10"/>
+<menuitem id="menu_crm_ai_agent_run_log" name="Run Logs" parent="menu_crm_ai_observability" action="action_crm_ai_agent_run_log" sequence="20"/>
+
 </odoo>
