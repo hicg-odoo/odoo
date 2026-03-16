@@ -7,3 +7,4 @@ access_crm_ai_relationship_signal_user,access.crm.ai.relationship.signal.user,mo
 access_crm_ai_agent_run_user,access.crm.ai.agent.run.user,model_crm_ai_agent_run,base.group_user,1,1,1,1
 access_crm_ai_agent_run_log_user,access.crm.ai.agent.run.log.user,model_crm_ai_agent_run_log,base.group_user,1,1,1,1
 access_crm_ai_meeting_transcript_user,access.crm.ai.meeting.transcript.user,model_crm_ai_meeting_transcript,base.group_user,1,1,1,1
+access_crm_ai_signal_rule_user,access.crm.ai.signal.rule.user,model_crm_ai_signal_rule,base.group_user,1,1,1,1
