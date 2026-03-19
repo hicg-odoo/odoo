@@ -4800,7 +4800,7 @@ class AccountMove(models.Model):
                 except (UserError, ValueError):
                     _logger.exception("Failed to link bill to purchase order")
 
-        if new and res:
+        if new:
             try:
                 attachments = set(self.attachment_ids + self._from_files_data(files_data + self._unwrap_attachments(files_data)))
                 self.journal_id._notify_invoice_subscribers(
@@ -4817,6 +4817,8 @@ class AccountMove(models.Model):
                 )
             except Exception:
                 _logger.exception("Failed to notify invoice subscribers after EDI import.")
+
+        self._post_process_link_to_purchase_order(self)
 
         return res
 
@@ -4851,6 +4853,11 @@ class AccountMove(models.Model):
         """ Helper to get a reason why an invoice cannot be decoded if it has invoice lines. """
         if self.invoice_line_ids:
             return self.env._("The invoice already contains lines.")
+
+    @api.model
+    def _post_process_link_to_purchase_order(self, invoice):
+        # To be implemented in modules needing to process the invoice after it was linked (or not) to a PO
+        pass
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
